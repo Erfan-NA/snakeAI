@@ -2,8 +2,10 @@
 # Erfan Nazarian
 
 import snake_classes
+import pygame
 
 MAIN_UP = snake_classes.Direction(0, 1)
 GLOBAL_DOWN = snake_classes.Direction(0, -1)
 GLOBAL_LEFT = snake_classes.Direction(-1, 0)
 GLOBAL_RIGHT = snake_classes.Direction(1, 0)
+
