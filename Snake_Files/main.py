@@ -29,6 +29,8 @@ pygame.display.set_caption("Pygame Example")
 cell_width = (screen_width - GRID_PADDING) // GLOBAL_BOARD_X
 cell_height = (screen_height - GRID_PADDING) // GLOBAL_BOARD_Y
 
+snake_globals.initializeBlockBoard()
+
 # Game loop
 running = True
 while running:
@@ -44,8 +46,9 @@ while running:
     for i in range(GLOBAL_BOARD_X):
         for j in range(GLOBAL_BOARD_Y):
             # Draw something in each cell
-            cell_x = GRID_PADDING + j * cell_width
-            cell_y = GRID_PADDING + i * cell_height
+            cell_direction = GLOBAL_BOARD_BLOCKS[i][j].direction
+            cell_x = GRID_PADDING + (j * cell_width)
+            cell_y = GRID_PADDING + (i * cell_height)
             cell_info = (cell_x, cell_y, cell_width, cell_height)
             pygame.draw.rect(screen, COLOR_MAP.get(GLOBAL_BOARD_TRINARY[i][j]), cell_info, 1)  # Example: Red outline
 
