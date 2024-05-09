@@ -25,12 +25,34 @@ class Direction:
 # The body list consists of all the blocks the snake is currently
 class Snake:
     def __init__(self, direction):
-        x = random.randint(0, round(GLOBAL_BOARD_X / 2)) + round(GLOBAL_BOARD_X / 4)
-        y = random.randint(0, round(GLOBAL_BOARD_Y / 2)) + round(GLOBAL_BOARD_Y / 4)
+        # x = random.randint(0, round(GLOBAL_BOARD_X / 2)) + round(GLOBAL_BOARD_X / 4)
+        # y = random.randint(0, round(GLOBAL_BOARD_Y / 2)) + round(GLOBAL_BOARD_Y / 4)
+        x = 2
+        y = 2
         self.head = Block(x, y, direction)
         self.direction = direction
         self.body = [Block(x, y, self.direction)]
+        self.empty_positions = []
 
+    # Function set for tracking what board indexes are empty and initilizing/updating that info
+    def initEmptyIndexes(self):
+        for i in range(GLOBAL_BOARD_Y):
+            for j in range(GLOBAL_BOARD_X):
+                self.empty_positions.append((i, j))
+        self.empty_positions.remove((self.head.x, self.head.y))
+
+    def addToEmptyIndex(self, position):
+        self.empty_positions.append(position)
+
+    def removeFromEmptyIndex(self, position):
+        if (position in self.empty_positions):
+            self.empty_positions.remove(position)
+        else:
+            print(self.empty_positions)
+            print((self.direction.x, self.direction.y))
+            print((self.head.x, self.head.y))
+            print(position)
+    # Self explanatory update direction
     def setDir(self, direction):
         self.direction.x = direction.x
         self.direction.y = direction.y
@@ -50,7 +72,7 @@ class Snake:
     def collisionCheck(self):
         newX = self.head.x + self.direction.x
         newY = self.head.y + self.direction.y
-        return GLOBAL_BOARD_TRINARY[newX][newY]
+        return GLOBAL_BOARD_TRINARY[newY][newX]
 
     # Updates all three parallel structs
     def updatePos(self, extend, newBlock):
@@ -60,8 +82,8 @@ class Snake:
             lastX = self.body[0].x
             lastY = self.body[0].y
             self.body.pop(0)
-            GLOBAL_BOARD_TRINARY[lastX][lastY] = 0
-            GLOBAL_BOARD_BLOCKS[lastX][lastY].direction = Direction(0, 0)
+            GLOBAL_BOARD_TRINARY[lastY][lastX] = 0
+            GLOBAL_BOARD_BLOCKS[lastY][lastX].direction = Direction(0, 0)
 
-        GLOBAL_BOARD_TRINARY[newBlock.x][newBlock.y] = 1
-        GLOBAL_BOARD_BLOCKS[newBlock.x][newBlock.y].direction = self.direction
+        GLOBAL_BOARD_TRINARY[newBlock.y][newBlock.x] = 1
+        GLOBAL_BOARD_BLOCKS[newBlock.y][newBlock.x].direction = self.direction

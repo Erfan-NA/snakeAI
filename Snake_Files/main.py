@@ -7,81 +7,148 @@ from snake_classes \
 import snake_global_constants
 from snake_global_constants \
     import GRID_PADDING, GLOBAL_BOARD_X, GLOBAL_BOARD_Y, GLOBAL_BOARD_BLOCKS, \
-    GLOBAL_BOARD_TRINARY, COLOR_MAP, BLOCK_MAP
+    GLOBAL_BOARD_TRINARY, COLOR_MAP, BLOCK_MAP, REFRESH_RATE
 import pygame
 import sys
+import time
+import random
 
 # Global variables in main
-GLOBAL_UP = Direction(0, 1)
-GLOBAL_DOWN = Direction(0, -1)
+GLOBAL_UP = Direction(0, -1)
+GLOBAL_DOWN = Direction(0, 1)
 GLOBAL_LEFT = Direction(-1, 0)
 GLOBAL_RIGHT = Direction(1, 0)
 GLOBAL_NO_DIR = Direction(0, 0)
 directions = [GLOBAL_NO_DIR, GLOBAL_LEFT, GLOBAL_RIGHT, GLOBAL_UP, GLOBAL_DOWN]
 
-# Initializations
+# Map for translating user key inputs into direction type
+GLOBAL_KEY_DIR_MAP = {
+    pygame.K_w: GLOBAL_UP,          # W key = Up
+    pygame.K_UP: GLOBAL_UP,         # Up arrow = Up
+    pygame.K_a: GLOBAL_LEFT,        # A key = Left
+    pygame.K_LEFT: GLOBAL_LEFT,     # Left arrow = Left
+    pygame.K_s: GLOBAL_DOWN,        # S key = Down
+    pygame.K_DOWN: GLOBAL_DOWN,     # Down arrow = Down
+    pygame.K_d: GLOBAL_RIGHT,       # D key = Right
+    pygame.K_RIGHT: GLOBAL_RIGHT,   # Right arrow = Right
+}
+
+
+# Self explanatory
+GLOBAL_OPPOSITE_DIR_MAP = {
+    GLOBAL_DOWN: GLOBAL_UP,
+    GLOBAL_RIGHT: GLOBAL_LEFT,
+    GLOBAL_UP: GLOBAL_DOWN,
+    GLOBAL_LEFT: GLOBAL_RIGHT,
+}
+
+# Initialize pygame
 pygame.init()
+
 # Get display info
 info = pygame.display.Info()
 
-# Get the size of the screen
+# Get the size of the screen (For now manually account for top of window)
 screen_width = info.current_w
 screen_height = info.current_h - 60
+
+min_size = screen_width
+if (screen_width > screen_height):
+    min_size = screen_height
+
 # Set up the screen
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Pygame Example")
 
 # Set up the grid size
-cell_width = ((screen_width - GRID_PADDING) // GLOBAL_BOARD_X)
-cell_height = ((screen_height - GRID_PADDING) // GLOBAL_BOARD_Y)
+cell_width = ((min_size - GRID_PADDING) // GLOBAL_BOARD_X)
+cell_height = ((min_size - GRID_PADDING) // GLOBAL_BOARD_Y)
 
 # Global struct initializations
 snake_global_constants.globalInitBoards()
 snake_global_constants.globalInitBlockMap(cell_width, cell_height, directions)
 
-player = Snake(Direction(-1, 0))
-GLOBAL_BOARD_TRINARY[player.head.x][player.head.y] = 1
-GLOBAL_BOARD_BLOCKS[player.head.x][player.head.y] = player.head
+# Instantiate player and update parallel boards
+player = Snake(GLOBAL_RIGHT)
+GLOBAL_BOARD_TRINARY[player.head.y][player.head.x] = 1
+GLOBAL_BOARD_BLOCKS[player.head.y][player.head.x] = player.head
+player.initEmptyIndexes()
 
 
-# Game loop
-running = True
-while running:
+# Rnadmoly places apple in one of the spots where the snake is not present
+def createApple():
+    newPos = random.choice(player.empty_positions)
+    GLOBAL_BOARD_TRINARY[newPos[0]][newPos[1]] = 2
+
+
+def main():
+    # Game loop
+    start_time = time.time()
+    elapsed_time = REFRESH_RATE * 1.1
+    createApple()
+    running = snakeEventHandler()
+
+    # Prev dir is used to stop player from input spam that cuases snake to go into itself
+    prevDir = player.direction
+    while running:
+        if (elapsed_time > REFRESH_RATE):
+            start_time = time.time()
+            if (GLOBAL_OPPOSITE_DIR_MAP[prevDir] == player.direction):
+                player.direction = prevDir
+
+            prevDir = player.direction
+            # Clear the screen
+            screen.fill(snake_global_constants.BLACK)  # Fill with black
+
+            # Draw content in each cell (optional)
+            for i in range(GLOBAL_BOARD_X):
+                for j in range(GLOBAL_BOARD_Y):
+                    # Draw something in each cell
+                    cell_x = GRID_PADDING + (j * cell_width)
+                    cell_y = GRID_PADDING + (i * cell_height)
+                    cell_info = (cell_x, cell_y, cell_width, cell_height)
+                    pygame.draw.rect(screen, COLOR_MAP.get(GLOBAL_BOARD_TRINARY[i][j]), cell_info)
+
+            # Snake collision check for walls and self
+            # If snake collides with empty block or apple, game handles it
+            if (not player.outOfBounds()):
+                newBlock = Block(player.head.x + player.direction.x, player.head.y + player.direction.y,
+                                 player.direction)
+                collision = player.collisionCheck()
+                if (collision == 0):
+                    player.addToEmptyIndex((player.body[0].x, player.body[0].y))
+                    player.removeFromEmptyIndex((newBlock.x, newBlock.y))
+                    player.updatePos(False, newBlock)
+                elif (collision == 2):
+                    player.removeFromEmptyIndex((newBlock.x, newBlock.y))
+                    player.updatePos(True, newBlock)
+                    createApple()
+                else:
+                    break
+
+            else:
+                break
+
+            # Update the display
+        elapsed_time = time.time() - start_time
+        pygame.display.flip()
+        running = snakeEventHandler()
+
+    # Quit Pygame
+    pygame.quit()
+    sys.exit()
+
+
+# Temp event handler for testing snake controls for eventual AI integration
+def snakeEventHandler():
     # Handle events
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # Clear the screen
-    screen.fill(snake_global_constants.BLACK)  # Fill with black
-
-    # Draw content in each cell (optional)
-    for i in range(GLOBAL_BOARD_X):
-        for j in range(GLOBAL_BOARD_Y):
-            # Draw something in each cell
-            cell_direction = GLOBAL_BOARD_BLOCKS[i][j].direction
-            cell_x = GRID_PADDING + (j * cell_width)
-            cell_y = GRID_PADDING + (i * cell_height)
-            cell_info = (cell_x, cell_y, cell_width, cell_height)
-            pygame.draw.rect(screen, COLOR_MAP.get(GLOBAL_BOARD_TRINARY[i][j]), cell_info)
+        if (event.type == pygame.QUIT):
+            return False
+        elif (event.type == pygame.KEYDOWN):
+            if (event.key in GLOBAL_KEY_DIR_MAP):
+                player.direction = GLOBAL_KEY_DIR_MAP[event.key]
+    return True
 
 
-    if (not player.outOfBounds()):
-        newBlock = Block(player.head.x + player.direction.x, player.head.y + player.direction.y, player.direction)
-        collision = player.collisionCheck()
-        if (collision == 0):
-            player.updatePos(False, newBlock)
-        elif (collision == 2):
-            player.updatePos(True, newBlock)
-        else:
-            running = False
-    else:
-        running = False
-    # COLLISIONS AND BOUNDS AND WIN CONDITION CHECKED
-
-    # Update the display
-    pygame.display.flip()
-
-# Quit Pygame
-pygame.quit()
-sys.exit()
+main()

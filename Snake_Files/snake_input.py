@@ -5,3 +5,5 @@ import snake_classes
 def directionOutput(snake):
 
     return snake_classes.Direction(-1, 0)
+
+

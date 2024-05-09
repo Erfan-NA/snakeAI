@@ -7,11 +7,12 @@ GLOBAL_BOARD_Y = 50
 GLOBAL_BOARD_TRINARY = []
 GLOBAL_BOARD_BLOCKS = []
 
-GRID_PADDING = 5  # Padding around the grid
+GRID_PADDING = 100  # Padding around the grid
+REFRESH_RATE = 0.1
 
 # Defined colors for convenience
 RED = (255, 0, 0)
-BLACK = (0, 0, 0)
+BLACK = (5, 5, 5)
 GREY = (20, 20, 20)
 GREEN = (0, 255, 0)
 
@@ -43,10 +44,10 @@ def globalInitBoards():
 # Dynamically adjusts to screen size
 def globalInitBlockMap(width, height, directions):
     BLOCK_MAP[directions[0]] = [width, height, [0, 0]]
-    BLOCK_MAP[directions[1]] = [width, height - 2, [1, 1]]
-    BLOCK_MAP[directions[2]] = [width, height - 2, [-1, 1]]
-    BLOCK_MAP[directions[3]] = [width - 2, height, [1, 1]]
-    BLOCK_MAP[directions[4]] = [width - 2, height, [1, -1]]
+    BLOCK_MAP[directions[1]] = [width, height - 4, [1, 2]]
+    BLOCK_MAP[directions[2]] = [width, height - 4, [-1, 2]]
+    BLOCK_MAP[directions[3]] = [width - 4, height, [2, 1]]
+    BLOCK_MAP[directions[4]] = [width - 4, height, [2, -1]]
 
 
 # Calculates the cell info for drawing using the block map defined globally
