@@ -1,6 +1,7 @@
 import random
-import snake_globals
-
+import snake_global_constants
+from snake_global_constants import \
+    GLOBAL_BOARD_X, GLOBAL_BOARD_Y, GLOBAL_BOARD_TRINARY
 
 # Position class defined for each block shown on screen
 # If snake on block, it is not empty
@@ -24,8 +25,8 @@ class Direction:
 class Snake:
     def __init__(self, head, direction):
         self.head = head
-        self.x = random.randint(0, round(snake_globals.GLOBAL_BOARD_X / 2)) + round(snake_globals.GLOBAL_BOARD_X / 4)
-        self.y = random.randint(0, round(snake_globals.GLOBAL_BOARD_Y / 2)) + round(snake_globals.GLOBAL_BOARD_Y / 4)
+        self.x = random.randint(0, round(GLOBAL_BOARD_X / 2)) + round(GLOBAL_BOARD_X / 4)
+        self.y = random.randint(0, round(GLOBAL_BOARD_Y / 2)) + round(GLOBAL_BOARD_Y / 4)
         self.direction = direction
         self.body = [Block(self.x, self.y, self.direction)]
 
@@ -39,7 +40,7 @@ class Snake:
         newY = self.y + self.direction.y
         if (newX < 0 or newY < 0):
             return True
-        elif (newX == snake_globals.GLOBAL_BOARD_X or newY == snake_globals.GLOBAL_BOARD_Y):
+        elif (newX == GLOBAL_BOARD_X or newY == GLOBAL_BOARD_Y):
             return True
         return False
 
@@ -47,4 +48,4 @@ class Snake:
     def collisionCheck(self):
         newX = self.x + self.direction.x
         newY = self.y + self.direction.y
-        return snake_globals.GLOBAL_BOARD_TRINARY[newX][newY]
+        return GLOBAL_BOARD_TRINARY[newX][newY]

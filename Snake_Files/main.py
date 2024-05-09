@@ -2,12 +2,19 @@
 # Erfan Nazarian
 
 import snake_classes
-import snake_globals
-from snake_globals \
+import snake_global_constants
+from snake_global_constants \
     import GRID_PADDING, GLOBAL_BOARD_X, GLOBAL_BOARD_Y, GLOBAL_BOARD_BLOCKS, \
     GLOBAL_BOARD_TRINARY, COLOR_MAP, BLOCK_MAP
 import pygame
 import sys
+
+GLOBAL_UP = snake_classes.Direction(0, 1)
+GLOBAL_DOWN = snake_classes.Direction(0, -1)
+GLOBAL_LEFT = snake_classes.Direction(-1, 0)
+GLOBAL_RIGHT = snake_classes.Direction(1, 0)
+GLOBAL_NO_DIR = snake_classes.Direction(0, 0)
+directions = [GLOBAL_NO_DIR, GLOBAL_LEFT, GLOBAL_RIGHT, GLOBAL_UP, GLOBAL_DOWN]
 
 # Initialize Pygame
 pygame.init()
@@ -25,8 +32,8 @@ pygame.display.set_caption("Pygame Example")
 cell_width = ((screen_width - GRID_PADDING) // GLOBAL_BOARD_X)
 cell_height = ((screen_height - GRID_PADDING) // GLOBAL_BOARD_Y)
 
-snake_globals.globalInitBlockBoard()
-snake_globals.globalInitBlockMap(cell_width, cell_height)
+snake_global_constants.globalInitBlockBoard()
+snake_global_constants.globalInitBlockMap(cell_width, cell_height, directions)
 
 # Game loop
 running = True
@@ -37,7 +44,7 @@ while running:
             running = False
 
     # Clear the screen
-    screen.fill(snake_globals.BLACK)  # Fill with black
+    screen.fill(snake_global_constants.BLACK)  # Fill with black
 
     # Draw content in each cell (optional)
     for i in range(GLOBAL_BOARD_X):
