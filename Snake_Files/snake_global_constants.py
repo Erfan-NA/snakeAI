@@ -4,7 +4,7 @@ import snake_classes
 
 GLOBAL_BOARD_X = 50
 GLOBAL_BOARD_Y = 50
-GLOBAL_BOARD_TRINARY = [[0] * GLOBAL_BOARD_X] * GLOBAL_BOARD_Y
+GLOBAL_BOARD_TRINARY = []
 GLOBAL_BOARD_BLOCKS = []
 
 GRID_PADDING = 5  # Padding around the grid
@@ -27,12 +27,15 @@ BLOCK_MAP = {}
 
 
 # Initialize game board of blocks for pygame to print, all blocks initialized as empty
-def globalInitBlockBoard():
+def globalInitBoards():
     for x in range(GLOBAL_BOARD_X):
         row = []
+        rowB = []
         for y in range(GLOBAL_BOARD_Y):
+            rowB.append(0)
             row.append(snake_classes.Block(x, y, snake_classes.Direction(0, 0)))
         GLOBAL_BOARD_BLOCKS.append(row)
+        GLOBAL_BOARD_TRINARY.append(rowB)
 
 
 # Used to initialize a block mapping which takes into account a direction and adjusts block size
