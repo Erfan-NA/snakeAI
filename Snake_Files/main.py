@@ -9,6 +9,7 @@ from snake_global_constants \
 import pygame
 import sys
 
+# Global variables in main
 GLOBAL_UP = snake_classes.Direction(0, 1)
 GLOBAL_DOWN = snake_classes.Direction(0, -1)
 GLOBAL_LEFT = snake_classes.Direction(-1, 0)
@@ -16,7 +17,7 @@ GLOBAL_RIGHT = snake_classes.Direction(1, 0)
 GLOBAL_NO_DIR = snake_classes.Direction(0, 0)
 directions = [GLOBAL_NO_DIR, GLOBAL_LEFT, GLOBAL_RIGHT, GLOBAL_UP, GLOBAL_DOWN]
 
-# Initialize Pygame
+# Initializations
 pygame.init()
 # Get display info
 info = pygame.display.Info()
@@ -32,6 +33,7 @@ pygame.display.set_caption("Pygame Example")
 cell_width = ((screen_width - GRID_PADDING) // GLOBAL_BOARD_X)
 cell_height = ((screen_height - GRID_PADDING) // GLOBAL_BOARD_Y)
 
+# Global struct initializations
 snake_global_constants.globalInitBlockBoard()
 snake_global_constants.globalInitBlockMap(cell_width, cell_height, directions)
 
@@ -54,16 +56,13 @@ while running:
             cell_x = GRID_PADDING + (j * cell_width)
             cell_y = GRID_PADDING + (i * cell_height)
             cell_info = (cell_x, cell_y, cell_width, cell_height)
-            pygame.draw.rect(screen, COLOR_MAP.get(GLOBAL_BOARD_TRINARY[i][j]), cell_info, 1)  # Example: Red outline
-
-        cell_x = GRID_PADDING
-        cell_y = GRID_PADDING + i * cell_height
-        cell_info = (cell_x, cell_y, cell_width, cell_height)
-        pygame.draw.rect(screen, COLOR_MAP.get(1), cell_info)  # Example: Red outline
+            pygame.draw.rect(screen, COLOR_MAP.get(GLOBAL_BOARD_TRINARY[i][j]), cell_info, 1)
 
     # Draw a blue rectangle
     # rect = pygame.Rect(100, 100, 200, 150)  # (x, y, width, height)
     # pygame.draw.rect(screen, snake_globals.BLUE, rect)
+
+    # COLLISIONS AND BOUNDS AND WIN CONDITION CHECKED
 
     # Update the display
     pygame.display.flip()

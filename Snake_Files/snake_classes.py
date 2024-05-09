@@ -1,7 +1,8 @@
 import random
 import snake_global_constants
 from snake_global_constants import \
-    GLOBAL_BOARD_X, GLOBAL_BOARD_Y, GLOBAL_BOARD_TRINARY
+    GLOBAL_BOARD_X, GLOBAL_BOARD_Y, GLOBAL_BOARD_TRINARY, GLOBAL_BOARD_BLOCKS
+
 
 # Position class defined for each block shown on screen
 # If snake on block, it is not empty
@@ -40,6 +41,7 @@ class Snake:
         newY = self.y + self.direction.y
         if (newX < 0 or newY < 0):
             return True
+
         elif (newX == GLOBAL_BOARD_X or newY == GLOBAL_BOARD_Y):
             return True
         return False
@@ -49,3 +51,16 @@ class Snake:
         newX = self.x + self.direction.x
         newY = self.y + self.direction.y
         return GLOBAL_BOARD_TRINARY[newX][newY]
+
+    # Updates all three parallel structs
+    def updatePos(self, extend, newBlock):
+        self.body.append(newBlock)
+        if (not extend):
+            lastX = self.body[0].x
+            lastY = self.body[0].y
+            self.body.pop(0)
+            GLOBAL_BOARD_TRINARY[lastX][lastY] = 0
+            GLOBAL_BOARD_BLOCKS[lastX][lastY].direction = Direction(0, 0)
+
+        GLOBAL_BOARD_TRINARY[newBlock.x][newBlock.y] = 1
+        GLOBAL_BOARD_BLOCKS[newBlock.x][newBlock.y].direction = self.direction

@@ -40,10 +40,10 @@ def globalInitBlockBoard():
 # Dynamically adjusts to screen size
 def globalInitBlockMap(width, height, directions):
     BLOCK_MAP[directions[0]] = [width, height, [0, 0]]
-    BLOCK_MAP[directions[1]] = [width + 1, height - 2, [-1, 1]]
-    BLOCK_MAP[directions[2]] = [width + 1, height - 2, [0, 1]]
-    BLOCK_MAP[directions[3]] = [width - 2, height + 1, [-1, 1]]
-    BLOCK_MAP[directions[4]] = [width - 2, height + 1, [0, 1]]
+    BLOCK_MAP[directions[1]] = [width, height - 2, [1, 1]]
+    BLOCK_MAP[directions[2]] = [width, height - 2, [-1, 1]]
+    BLOCK_MAP[directions[3]] = [width - 2, height, [1, 1]]
+    BLOCK_MAP[directions[4]] = [width - 2, height, [1, -1]]
 
 
 # Calculates the cell info for drawing using the block map defined globally
