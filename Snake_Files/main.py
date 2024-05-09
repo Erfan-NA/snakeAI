@@ -4,14 +4,10 @@
 import snake_classes
 import snake_globals
 from snake_globals \
-    import GRID_PADDING, GLOBAL_BOARD_X, GLOBAL_BOARD_Y, GLOBAL_BOARD_BLOCKS, GLOBAL_BOARD_TRINARY, COLOR_MAP
+    import GRID_PADDING, GLOBAL_BOARD_X, GLOBAL_BOARD_Y, GLOBAL_BOARD_BLOCKS, \
+    GLOBAL_BOARD_TRINARY, COLOR_MAP, BLOCK_MAP
 import pygame
 import sys
-
-GLOBAL_UP = snake_classes.Direction(0, 1)
-GLOBAL_DOWN = snake_classes.Direction(0, -1)
-GLOBAL_LEFT = snake_classes.Direction(-1, 0)
-GLOBAL_RIGHT = snake_classes.Direction(1, 0)
 
 # Initialize Pygame
 pygame.init()
@@ -26,10 +22,11 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Pygame Example")
 
 # Set up the grid size
-cell_width = (screen_width - GRID_PADDING) // GLOBAL_BOARD_X
-cell_height = (screen_height - GRID_PADDING) // GLOBAL_BOARD_Y
+cell_width = ((screen_width - GRID_PADDING) // GLOBAL_BOARD_X)
+cell_height = ((screen_height - GRID_PADDING) // GLOBAL_BOARD_Y)
 
-snake_globals.initializeBlockBoard()
+snake_globals.globalInitBlockBoard()
+snake_globals.globalInitBlockMap(cell_width, cell_height)
 
 # Game loop
 running = True
