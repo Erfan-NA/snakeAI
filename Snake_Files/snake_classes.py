@@ -1,5 +1,5 @@
 import random
-import snake_global_constants
+# import snake_global_constants
 from snake_global_constants import \
     GLOBAL_BOARD_X, GLOBAL_BOARD_Y, GLOBAL_BOARD_TRINARY, GLOBAL_BOARD_BLOCKS
 
@@ -7,11 +7,11 @@ from snake_global_constants import \
 # Position class defined for each block shown on screen
 # If snake on block, it is not empty
 class Block:
-    def __init__(self, x, y, direction):
+    def __init__(self, x, y, direction, cost):
         self.x = x
         self.y = y
-        self.empty = False
         self.direction = direction
+        self.cost = cost
 
 
 # Class used for defining snake movement directions for convenience
@@ -20,19 +20,24 @@ class Direction:
         self.x = x
         self.y = y
 
+    def __eq__(self, other):
+        if isinstance(other, Direction):
+            return self.x == other.x and self.y == other.y
+        return False
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
 
 # The main body of the snake object defined with appropriate position and direction
 # The body list consists of all the blocks the snake is currently
 class Snake:
     def __init__(self, direction):
-        # x = random.randint(0, round(GLOBAL_BOARD_X / 2)) + round(GLOBAL_BOARD_X / 4)
-        # y = random.randint(0, round(GLOBAL_BOARD_Y / 2)) + round(GLOBAL_BOARD_Y / 4)
-        x = 2
-        y = 2
-        self.head = Block(x, y, direction)
+        x = random.randint(0, round(GLOBAL_BOARD_X / 2)) + round(GLOBAL_BOARD_X / 4)
+        y = random.randint(0, round(GLOBAL_BOARD_Y / 2)) + round(GLOBAL_BOARD_Y / 4)
+        self.head = Block(x, y, direction, 0)
         self.direction = direction
-        self.body = [Block(x, y, self.direction)]
-
+        self.body = [Block(x, y, self.direction, 0)]
 
     # Self explanatory update direction
     def setDir(self, direction):

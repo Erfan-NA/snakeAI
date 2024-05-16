@@ -1,7 +1,6 @@
 # This is the beginning of one hell of a grueling project I hope. May 6, 2024.
 # Erfan Nazarian
 
-import snake_classes
 from snake_classes \
     import Direction, Block, Snake
 import snake_global_constants
@@ -69,14 +68,14 @@ snake_global_constants.globalInitBoards()
 snake_global_constants.globalInitBlockMap(cell_width, cell_height, directions)
 
 # Instantiate player and update parallel boards
-player = Snake(GLOBAL_RIGHT)
+player = Snake(random.choice(list(GLOBAL_OPPOSITE_DIR_MAP.keys())))
 GLOBAL_BOARD_TRINARY[player.head.y][player.head.x] = 1
 GLOBAL_BOARD_BLOCKS[player.head.y][player.head.x] = player.head
 GLOBAL_FREE_SPOTS = GLOBAL_BOARD_X * GLOBAL_BOARD_Y
 
 # Randomly places apple in one of the spots where the snake is not present
-def createApple(GLOBAL_FREE_SPOTS):
-    newPos = random.randint(1, GLOBAL_FREE_SPOTS)
+def createApple(spots):
+    newPos = random.randint(1, spots)
     counter = 0
     x = 0
     y = 0
@@ -89,7 +88,7 @@ def createApple(GLOBAL_FREE_SPOTS):
             y = y % GLOBAL_BOARD_Y
     x -= 1
     GLOBAL_BOARD_TRINARY[y][x] = 2
-    GLOBAL_FREE_SPOTS -= 1
+    spots -= 1
 
 
 a = 2
@@ -115,19 +114,20 @@ def main():
             screen.fill(snake_global_constants.BLACK)  # Fill with black
 
             # Draw content in each cell (optional)
-            for i in range(GLOBAL_BOARD_X):
-                for j in range(GLOBAL_BOARD_Y):
+            for j in range(GLOBAL_BOARD_Y):
+                for i in range(GLOBAL_BOARD_X):
                     # Draw something in each cell
-                    cell_x = GRID_PADDING + (j * cell_width)
-                    cell_y = GRID_PADDING + (i * cell_height)
-                    cell_info = (cell_x, cell_y, cell_width, cell_height)
-                    pygame.draw.rect(screen, COLOR_MAP.get(GLOBAL_BOARD_TRINARY[i][j]), cell_info)
+                    cell_adjust = BLOCK_MAP[GLOBAL_BOARD_BLOCKS[j][i].direction]
+                    cell_x = GRID_PADDING + (i * cell_width) + cell_adjust[2][0]
+                    cell_y = GRID_PADDING + (j * cell_height) + cell_adjust[2][1]
+                    cell_info = (cell_x, cell_y, cell_adjust[0], cell_adjust[1])
+                    pygame.draw.rect(screen, COLOR_MAP.get(GLOBAL_BOARD_TRINARY[j][i]), cell_info)
 
             # Snake collision check for walls and self
             # If snake collides with empty block or apple, game handles it
             if (not player.outOfBounds()):
                 newBlock = Block(player.head.x + player.direction.x, player.head.y + player.direction.y,
-                                 player.direction)
+                                 player.direction, 0)
                 collision = player.collisionCheck()
                 if (collision == 0):
                     player.updatePos(False, newBlock)

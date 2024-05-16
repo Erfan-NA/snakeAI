@@ -38,7 +38,7 @@ def globalInitBoards():
         rowB = []
         for y in range(GLOBAL_BOARD_Y):
             rowB.append(0)
-            row.append(snake_classes.Block(x, y, snake_classes.Direction(0, 0)))
+            row.append(snake_classes.Block(x, y, snake_classes.Direction(0, 0), 0))
         GLOBAL_BOARD_BLOCKS.append(row)
         GLOBAL_BOARD_TRINARY.append(rowB)
 
@@ -48,10 +48,10 @@ def globalInitBoards():
 # Dynamically adjusts to screen size
 def globalInitBlockMap(width, height, directions):
     BLOCK_MAP[directions[0]] = [width, height, [0, 0]]
-    BLOCK_MAP[directions[1]] = [width, height - 4, [1, 2]]
-    BLOCK_MAP[directions[2]] = [width, height - 4, [-1, 2]]
-    BLOCK_MAP[directions[3]] = [width - 4, height, [2, 1]]
-    BLOCK_MAP[directions[4]] = [width - 4, height, [2, -1]]
+    BLOCK_MAP[directions[1]] = [width, height - 2, [1, 1]]
+    BLOCK_MAP[directions[2]] = [width, height - 2, [-1, 1]]
+    BLOCK_MAP[directions[3]] = [width - 2, height, [1, 1]]
+    BLOCK_MAP[directions[4]] = [width - 2, height, [1, -1]]
 
 
 # Calculates the cell info for drawing using the block map defined globally
