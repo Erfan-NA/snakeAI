@@ -32,26 +32,8 @@ class Snake:
         self.head = Block(x, y, direction)
         self.direction = direction
         self.body = [Block(x, y, self.direction)]
-        self.empty_positions = []
 
-    # Function set for tracking what board indexes are empty and initilizing/updating that info
-    def initEmptyIndexes(self):
-        for i in range(GLOBAL_BOARD_Y):
-            for j in range(GLOBAL_BOARD_X):
-                self.empty_positions.append((i, j))
-        self.empty_positions.remove((self.head.x, self.head.y))
 
-    def addToEmptyIndex(self, position):
-        self.empty_positions.append(position)
-
-    def removeFromEmptyIndex(self, position):
-        if (position in self.empty_positions):
-            self.empty_positions.remove(position)
-        else:
-            print(self.empty_positions)
-            print((self.direction.x, self.direction.y))
-            print((self.head.x, self.head.y))
-            print(position)
     # Self explanatory update direction
     def setDir(self, direction):
         self.direction.x = direction.x

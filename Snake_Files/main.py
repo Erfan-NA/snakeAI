@@ -72,23 +72,37 @@ snake_global_constants.globalInitBlockMap(cell_width, cell_height, directions)
 player = Snake(GLOBAL_RIGHT)
 GLOBAL_BOARD_TRINARY[player.head.y][player.head.x] = 1
 GLOBAL_BOARD_BLOCKS[player.head.y][player.head.x] = player.head
-player.initEmptyIndexes()
+GLOBAL_FREE_SPOTS = GLOBAL_BOARD_X * GLOBAL_BOARD_Y
+
+# Randomly places apple in one of the spots where the snake is not present
+def createApple(GLOBAL_FREE_SPOTS):
+    newPos = random.randint(1, GLOBAL_FREE_SPOTS)
+    counter = 0
+    x = 0
+    y = 0
+    while (counter != newPos):
+        counter += snake_global_constants.BINARY_CONVERT[GLOBAL_BOARD_TRINARY[y][x]]
+        x += 1
+        if (x == GLOBAL_BOARD_X):
+            x = 0
+            y += 1
+            y = y % GLOBAL_BOARD_Y
+    x -= 1
+    GLOBAL_BOARD_TRINARY[y][x] = 2
+    GLOBAL_FREE_SPOTS -= 1
 
 
-# Rnadmoly places apple in one of the spots where the snake is not present
-def createApple():
-    newPos = random.choice(player.empty_positions)
-    GLOBAL_BOARD_TRINARY[newPos[0]][newPos[1]] = 2
+a = 2
 
 
 def main():
     # Game loop
     start_time = time.time()
     elapsed_time = REFRESH_RATE * 1.1
-    createApple()
+    createApple(GLOBAL_FREE_SPOTS)
     running = snakeEventHandler()
 
-    # Prev dir is used to stop player from input spam that cuases snake to go into itself
+    # Prev dir is used to stop player from input spam that causes snake to go into itself
     prevDir = player.direction
     while running:
         if (elapsed_time > REFRESH_RATE):
@@ -116,13 +130,10 @@ def main():
                                  player.direction)
                 collision = player.collisionCheck()
                 if (collision == 0):
-                    player.addToEmptyIndex((player.body[0].x, player.body[0].y))
-                    player.removeFromEmptyIndex((newBlock.x, newBlock.y))
                     player.updatePos(False, newBlock)
                 elif (collision == 2):
-                    player.removeFromEmptyIndex((newBlock.x, newBlock.y))
                     player.updatePos(True, newBlock)
-                    createApple()
+                    createApple(GLOBAL_FREE_SPOTS)
                 else:
                     break
 

@@ -25,6 +25,10 @@ COLOR_MAP = {
 }
 
 BLOCK_MAP = {}
+BINARY_CONVERT = {
+    1: 0,
+    0: 1,
+}
 
 
 # Initialize game board of blocks for pygame to print, all blocks initialized as empty
