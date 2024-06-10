@@ -1,11 +1,9 @@
-import snake_classes
+
 import queue
-from snake_classes \
-    import Direction, Block, Snake
-import snake_global_constants
-from snake_global_constants \
+import snake_globals
+from snake_globals \
     import GRID_PADDING, GLOBAL_BOARD_X, GLOBAL_BOARD_Y, GLOBAL_BOARD_BLOCKS, \
-    GLOBAL_BOARD_TRINARY, COLOR_MAP, BLOCK_MAP, REFRESH_RATE
+    GLOBAL_BOARD_TRINARY, COLOR_MAP, BLOCK_MAP, REFRESH_RATE, Direction, Block, Snake
 import pygame
 import sys
 import time
@@ -23,6 +21,6 @@ def directionOutput(snake, apple):
         currY = block.y
 
 
-    return snake_classes.Direction(-1, 0)
+    # return snake_classes.Direction(-1, 0)
 
 

@@ -1,12 +1,9 @@
 # This is the beginning of one hell of a grueling project I hope. May 6, 2024.
 # Erfan Nazarian
-
-from snake_classes \
-    import Direction, Block, Snake
-import snake_global_constants
-from snake_global_constants \
+import snake_globals
+from snake_globals \
     import GRID_PADDING, GLOBAL_BOARD_X, GLOBAL_BOARD_Y, GLOBAL_BOARD_BLOCKS, \
-    GLOBAL_BOARD_TRINARY, COLOR_MAP, BLOCK_MAP, REFRESH_RATE
+    GLOBAL_BOARD_TRINARY, COLOR_MAP, BLOCK_MAP, REFRESH_RATE, Direction, Block, Snake
 import pygame
 import sys
 import time
@@ -64,13 +61,13 @@ cell_width = ((min_size - GRID_PADDING) // GLOBAL_BOARD_X)
 cell_height = ((min_size - GRID_PADDING) // GLOBAL_BOARD_Y)
 
 # Global struct initializations
-snake_global_constants.globalInitBoards()
-snake_global_constants.globalInitBlockMap(cell_width, cell_height, directions)
+snake_globals.globalInitBoards()
+snake_globals.globalInitBlockMap(cell_width, cell_height, directions)
 
 # Instantiate player and update parallel boards
 player = Snake(random.choice(list(GLOBAL_OPPOSITE_DIR_MAP.keys())))
-GLOBAL_BOARD_TRINARY[player.head.y][player.head.x] = 1
-GLOBAL_BOARD_BLOCKS[player.head.y][player.head.x] = player.head
+GLOBAL_BOARD_TRINARY[player.head.y, player.head.x] = 1
+GLOBAL_BOARD_BLOCKS[player.head.y, player.head.x] = player.head
 GLOBAL_FREE_SPOTS = GLOBAL_BOARD_X * GLOBAL_BOARD_Y
 
 
@@ -81,14 +78,14 @@ def createApple(spots):
     x = 0
     y = 0
     while (counter != newPos):
-        counter += snake_global_constants.BINARY_CONVERT[GLOBAL_BOARD_TRINARY[y][x]]
+        counter += snake_globals.BINARY_CONVERT[GLOBAL_BOARD_TRINARY[y, x]]
         x += 1
         if (x == GLOBAL_BOARD_X):
             x = 0
             y += 1
             y = y % GLOBAL_BOARD_Y
     x -= 1
-    GLOBAL_BOARD_TRINARY[y][x] = 2
+    GLOBAL_BOARD_TRINARY[y, x] = 2
     spots -= 1
     return (x, y)
 
@@ -113,17 +110,17 @@ def main():
 
             prevDir = player.direction
             # Clear the screen
-            screen.fill(snake_global_constants.BLACK)  # Fill with black
+            screen.fill(snake_globals.BLACK)  # Fill with black
 
             # Draw content in each cell (optional)
             for j in range(GLOBAL_BOARD_Y):
                 for i in range(GLOBAL_BOARD_X):
                     # Draw something in each cell
-                    cell_adjust = BLOCK_MAP[GLOBAL_BOARD_BLOCKS[j][i].direction]
+                    cell_adjust = BLOCK_MAP[GLOBAL_BOARD_BLOCKS[j, i].direction]
                     cell_x = GRID_PADDING + (i * cell_width) + cell_adjust[2][0]
                     cell_y = GRID_PADDING + (j * cell_height) + cell_adjust[2][1]
                     cell_info = (cell_x, cell_y, cell_adjust[0], cell_adjust[1])
-                    pygame.draw.rect(screen, COLOR_MAP.get(GLOBAL_BOARD_TRINARY[j][i]), cell_info)
+                    pygame.draw.rect(screen, COLOR_MAP.get(GLOBAL_BOARD_TRINARY[j, i]), cell_info)
 
             # Snake collision check for walls and self
             # If snake collides with empty block or apple, game handles it
