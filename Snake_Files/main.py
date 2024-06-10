@@ -73,6 +73,7 @@ GLOBAL_BOARD_TRINARY[player.head.y][player.head.x] = 1
 GLOBAL_BOARD_BLOCKS[player.head.y][player.head.x] = player.head
 GLOBAL_FREE_SPOTS = GLOBAL_BOARD_X * GLOBAL_BOARD_Y
 
+
 # Randomly places apple in one of the spots where the snake is not present
 def createApple(spots):
     newPos = random.randint(1, spots)
@@ -89,6 +90,7 @@ def createApple(spots):
     x -= 1
     GLOBAL_BOARD_TRINARY[y][x] = 2
     spots -= 1
+    return (x, y)
 
 
 a = 2
@@ -98,7 +100,7 @@ def main():
     # Game loop
     start_time = time.time()
     elapsed_time = REFRESH_RATE * 1.1
-    createApple(GLOBAL_FREE_SPOTS)
+    APPLE = createApple(GLOBAL_FREE_SPOTS)
     running = snakeEventHandler()
 
     # Prev dir is used to stop player from input spam that causes snake to go into itself
@@ -133,7 +135,7 @@ def main():
                     player.updatePos(False, newBlock)
                 elif (collision == 2):
                     player.updatePos(True, newBlock)
-                    createApple(GLOBAL_FREE_SPOTS)
+                    APPLE = createApple(GLOBAL_FREE_SPOTS)
                 else:
                     break
 

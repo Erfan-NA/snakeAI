@@ -10,6 +10,7 @@ class Block:
     def __init__(self, x, y, direction, cost):
         self.x = x
         self.y = y
+        self.visited = False
         self.direction = direction
         self.cost = cost
 
